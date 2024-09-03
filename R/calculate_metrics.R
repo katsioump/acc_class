@@ -28,16 +28,10 @@
 # load("timon_acc.Rda")
 # 
 # source("calculate_metrics.R")
-# tl <- calculate_metrics(g = TRUE, k = 11)
+# tl <- calculate_metrics(k = 11)
 
 
-calculate_metrics <- function(n_sensor = 5, g = TRUE, k = 11){
-  
-  if (g == TRUE){
-    tl$X <- tl$X * 9.8
-    tl$Y <- tl$Y * 9.8
-    tl$Z <- tl$Z * 9.8
-  }
+calculate_metrics <- function(n_sensor = 5, k = 11){
   
   require(dplyr)
   
@@ -63,24 +57,24 @@ calculate_metrics <- function(n_sensor = 5, g = TRUE, k = 11){
   
   
   tl <- tl %>%
-   dplyr::mutate(SDx = zoo::rollapply(X, width = 11, FUN = sd, fill = NA),
-                 SDy = zoo::rollapply(Y, width = 11, FUN = sd, fill = NA),
-                 SDz = zoo::rollapply(Z, width = 11, FUN = sd, fill = NA))
+   dplyr::mutate(SDx = zoo::rollapply(X, width = k, FUN = sd, fill = NA),
+                 SDy = zoo::rollapply(Y, width = k, FUN = sd, fill = NA),
+                 SDz = zoo::rollapply(Z, width = k, FUN = sd, fill = NA))
   
   tl <- tl %>%
-    dplyr::mutate(MAXx = zoo::rollapply(X, width = 11, FUN = max, fill = NA),
-                  MAXy = zoo::rollapply(Y, width = 11, FUN = max, fill = NA),
-                  MAXz = zoo::rollapply(Z, width = 11, FUN = max, fill = NA))
+    dplyr::mutate(MAXx = zoo::rollapply(X, width = k, FUN = max, fill = NA),
+                  MAXy = zoo::rollapply(Y, width = k, FUN = max, fill = NA),
+                  MAXz = zoo::rollapply(Z, width = k, FUN = max, fill = NA))
   
   tl <- tl %>%
-    dplyr::mutate(SDdbax = zoo::rollapply(DBAx, width = 11, FUN = sd, fill = NA),
-                  SDdbay = zoo::rollapply(DBAy, width = 11, FUN = sd, fill = NA),
-                  SDdbaz = zoo::rollapply(DBAz, width = 11, FUN = sd, fill = NA))
+    dplyr::mutate(SDdbax = zoo::rollapply(DBAx, width = k, FUN = sd, fill = NA),
+                  SDdbay = zoo::rollapply(DBAy, width = k, FUN = sd, fill = NA),
+                  SDdbaz = zoo::rollapply(DBAz, width = k, FUN = sd, fill = NA))
   
   tl <- tl %>%
-    dplyr::mutate(MAXdbax = zoo::rollapply(DBAx, width = 11, FUN = max, fill = NA),
-                  MAXdbay = zoo::rollapply(DBAy, width = 11, FUN = max, fill = NA),
-                  MAXdbaz = zoo::rollapply(DBAz, width = 11, FUN = max, fill = NA))
+    dplyr::mutate(MAXdbax = zoo::rollapply(DBAx, width = k, FUN = max, fill = NA),
+                  MAXdbay = zoo::rollapply(DBAy, width = k, FUN = max, fill = NA),
+                  MAXdbaz = zoo::rollapply(DBAz, width = k, FUN = max, fill = NA))
   
   return(tl)
 }
